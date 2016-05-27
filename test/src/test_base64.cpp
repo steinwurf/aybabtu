@@ -9,10 +9,41 @@
 
 #include <gtest/gtest.h>
 
-TEST(test_base64, encode_decode)
+static void test_encode_decode(const std::vector<uint8_t>& data)
 {
-    std::vector<uint8_t> data = {1, 2, 3, 45, 5, 6, 7, 4, 99, 32, 2, 46, 7, 64};
     auto encoded = aybabtu::base64::encode(data);
     auto result = aybabtu::base64::decode(encoded);
     EXPECT_EQ(data, result);
+}
+
+TEST(test_base64, encode_decode)
+{
+    {
+        std::vector<uint8_t> data = {1};
+        test_encode_decode(data);
+    }
+    {
+        std::vector<uint8_t> data = {1, 2};
+        test_encode_decode(data);
+    }
+    {
+        std::vector<uint8_t> data = {1, 2, 3};
+        test_encode_decode(data);
+    }
+    {
+        std::vector<uint8_t> data(100, 100);
+        test_encode_decode(data);
+    }
+    {
+        std::vector<uint8_t> data = {};
+        test_encode_decode(data);
+    }
+    {
+        std::vector<uint8_t> data(100, 0);
+        test_encode_decode(data);
+    }
+    {
+        std::vector<uint8_t> data(100, 1);
+        test_encode_decode(data);
+    }
 }

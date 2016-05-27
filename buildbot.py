@@ -10,8 +10,8 @@ project_name = 'aybabtu'
 
 def run_command(args):
     print("Running: {}".format(args))
-    # sys.stdout.flush()
-    # subprocess.check_call(args)
+    sys.stdout.flush()
+    subprocess.check_call(args)
 
 
 def get_tool_options(properties):
@@ -80,8 +80,8 @@ def install(properties):
     run_command(command)
 
 
-#def coverage_settings(options):
-#    options['required_line_coverage'] = 94.0
+def coverage_settings(options):
+    options['required_line_coverage'] = 100.0
 
 
 def main():
