@@ -9,7 +9,7 @@
 
 int main()
 {
-    std::vector<uint8_t> data { 1 ,2 ,3, 4, 5, 6, 7, 8, 9, 10 };
+    std::vector<uint8_t> data { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     auto encoded = aybabtu::base64::encode(data);
     std::cout << "base64 encoded string: " << encoded << std::endl;
     std::cout << "Trying to decode..." << std::endl;
