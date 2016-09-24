@@ -14,6 +14,7 @@ int main()
     std::cout << "base64 encoded string: " << encoded << std::endl;
     std::cout << "Trying to decode..." << std::endl;
     auto result = aybabtu::base64::decode(encoded);
+
     if (result == data)
     {
         std::cout << "Decoded correctly." << std::endl;
