@@ -48,14 +48,19 @@ TEST(test_base64, encode_decode)
     }
 }
 
-TEST(test_base64, decode)
+TEST(test_base64, know_results)
 {
-    auto encoding = "Z2QAH6y0AoAt2AiAAAADAIAAABgHjBlQ";
-    std::vector<uint8_t> expectation =
-    {
-        0x67, 0x64, 0x00, 0x1F, 0xAC, 0xB4, 0x02, 0x80, 0x2D, 0xD8, 0x08, 0x80,
-        0x00, 0x00, 0x03, 0x00, 0x80, 0x00, 0x00, 0x18, 0x07, 0x8C, 0x19, 0x50
-    };
-    auto result = aybabtu::base64::decode(encoding);
-    EXPECT_EQ(expectation, result);
+    auto encoding_expectation = "Z2QAH6y0AoAt2AiAAAADAIAAABgHjBlQ";
+    std::vector<uint8_t> decoding_expectation =
+        {
+            0x67, 0x64, 0x00, 0x1F, 0xAC, 0xB4, 0x02, 0x80, 0x2D, 0xD8, 0x08,
+            0x80, 0x00, 0x00, 0x03, 0x00, 0x80, 0x00, 0x00, 0x18, 0x07, 0x8C,
+            0x19, 0x50
+        };
+
+    auto decoding_result = aybabtu::base64::decode(encoding_expectation);
+    EXPECT_EQ(decoding_expectation, decoding_result);
+
+    auto encoding_result = aybabtu::base64::encode(decoding_expectation);
+    EXPECT_EQ(encoding_expectation, encoding_result);
 }
