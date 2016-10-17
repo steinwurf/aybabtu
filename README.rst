@@ -14,4 +14,4 @@ The implememtation is inspired greatly by code presented on
 Usage
 =====
 
-See the ``example.cpp`` on an example how to use the library.
+See the ``example.cpp`` for an example on how to use the library.
