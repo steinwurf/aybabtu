@@ -8,6 +8,11 @@ Latest
 ------
 * tbd
 
+2.0.0
+-----
+* Major: Upgrade to waf-tools 4
+* Minor: Upgrade to gtest 4
+
 1.0.0
 -----
 * Major: Initial release.
