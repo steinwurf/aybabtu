@@ -1,0 +1,13 @@
+language: cpp
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+    - os: linux
+      compiler: clang
+    - os: osx
+    - os: windows
+install:
+  - python waf configure
+script:
+  - python waf build --run_tests
