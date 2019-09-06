@@ -1,4 +1,4 @@
-language: bash
+language: generic
 matrix:
   include:
     - name: Linux Ubuntu 16 - g++
@@ -23,8 +23,10 @@ matrix:
       os: windows
       env:
         - PYTHONIOENCODING=UTF-8
+        - CHOCO_PYTHON="/c/Python27"
       before_install:
         - choco install python2
+        - export PATH=$CHOCO_PYTHON:$PATH
         - echo $PATH
       install:
         - python --version
