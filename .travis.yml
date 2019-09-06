@@ -1,13 +1,20 @@
-language: cpp
+language: bash
 matrix:
   include:
     - os: linux
+      dist: xenial
       compiler: gcc
     - os: linux
+      dist: bionic
+      compiler: gcc
+    - os: linux
+      dist: bionic
       compiler: clang
     - os: osx
+      osx_image: xcode11
+      compiler: clang
     - os: windows
 install:
   - python waf configure
 script:
-  - python waf build --run_tests
+  - python waf build -v --run_tests
