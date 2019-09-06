@@ -23,11 +23,12 @@ matrix:
       os: windows
       env:
         - PYTHONIOENCODING=UTF-8
+      before_install:
+        - choco install python2
       install:
         - python waf --help
       script:
         - python --version
-        - pip --version
 install:
   - python waf configure
 script:
