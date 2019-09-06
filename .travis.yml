@@ -1,29 +1,30 @@
 language: bash
 matrix:
   include:
-    - name: Linux Ubuntu 16 g++
+    - name: Linux Ubuntu 16 - g++
       os: linux
       dist: xenial
       compiler: gcc
-    - name: Linux Ubuntu 18 g++
+    - name: Linux Ubuntu 18 - g++
       os: linux
       dist: bionic
       compiler: gcc
-    - name: Linux Ubuntu 18 clang
+    - name: Linux Ubuntu 18 - clang
       os: linux
       dist: bionic
       compiler: clang
       env:
-        - COMPILER="CXX=clang++"
-      before_install: eval "${COMPILER}"
-    - name: MacOSX 10.14 XCode 11
+        - CXX=clang++
+    - name: MacOSX 10.14 - XCode 11
       os: osx
       osx_image: xcode11
       compiler: clang
-    - name: Linux Ubuntu 18 clang
+    - name: Windows - Visual Studio 2017
       os: windows
       env:
         - PYTHONIOENCODING=UTF-8
+      install:
+        - python waf --help
       script:
         - python --version
         - pip --version
