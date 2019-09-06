@@ -25,10 +25,12 @@ matrix:
         - PYTHONIOENCODING=UTF-8
       before_install:
         - choco install python2
+        - echo $PATH
       install:
-        - python waf --help
-      script:
         - python --version
+        - echo $PATH
+        - which python
+        - python waf configure
 install:
   - python waf configure
 script:
