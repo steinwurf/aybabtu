@@ -22,17 +22,16 @@ matrix:
     - name: Windows - Visual Studio 2017
       os: windows
       env:
-        - PYTHONIOENCODING=UTF-8
+      #  - PYTHONIOENCODING=UTF-8
         - CHOCO_PYTHON="/c/Python27"
-      before_install:
-        - choco install python2
-        - export PATH=$CHOCO_PYTHON:$PATH
-        - echo $PATH
+      #before_install:
+      #  - choco install python2
+      #  - export PATH=$CHOCO_PYTHON:$PATH
+      #  - echo $PATH
       install:
+        - cmd.exe /c chcp
         - python --version
-        - echo $PATH
-        - which python
-        - python waf configure
+        - powershell -c "chcp 850; python waf configure"
 install:
   - python waf configure
 script:
