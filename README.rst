@@ -4,7 +4,7 @@ aybabtu
 
 .. image:: https://travis-ci.org/steinwurf/aybabtu.svg?branch=master
     :target: https://travis-ci.org/steinwurf/aybabtu
-|
+
 .. image:: http://www.allyourbasearebelongtous.com/gif/allyourbase.gif
    :target: https://en.wikipedia.org/wiki/All_your_base_are_belong_to_us
 
