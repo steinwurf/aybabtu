@@ -50,7 +50,7 @@ def configure(properties):
 
     if 'nodebug' in properties:
         command += ["--cxx_nodebug"]
-        
+
     command += get_tool_options(properties)
 
     run_command(command)
