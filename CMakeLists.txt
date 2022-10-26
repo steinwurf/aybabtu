@@ -112,7 +112,7 @@ include(CheckCXXCompilerFlag)
 # endif()
 # endif()
 target_include_directories(aybabtu INTERFACE src)
-target_compile_features(kodo PUBLIC cxx_std_11)
+target_compile_features(aybabtu PUBLIC cxx_std_11)
 add_library(steinwurf::aybabtu ALIAS aybabtu)
 
 # Install headers excluding "detail" as these are internal to the library.
