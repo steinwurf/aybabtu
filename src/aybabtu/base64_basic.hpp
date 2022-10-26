@@ -15,18 +15,22 @@ inline namespace STEINWURF_AYBABTU_VERSION
 {
 struct base64_basic
 {
-    /// Create a base64 encoded string from a pointer and size.
+    /// Encode a pointer and size to a base64 encoded string
     ///
     /// @param data a pointer to the data
     /// @param size the size of the data in bytes
-    static std::string encode(const uint8_t* data, std::size_t size);
+    /// @param out the output string
+    /// @return the number of bytes written to the data pointer
+    static std::size_t encode(const uint8_t* data, std::size_t size, char* out);
 
     /// Decode a base64 encoded string to a given pointer
     ///
+    /// @param encoded_string the encoded string
+    /// @param size the size of the encoded string
     /// @param data a pointer to the data
-    /// @param encoded_data A string containing the encoded data.
     /// @return the number of bytes written to the data pointer
-    static std::size_t decode(uint8_t* data, const std::string& encoded_data);
+    static std::size_t decode(const char* encoded_string, std::size_t size,
+                              uint8_t* data);
 };
 }
 }

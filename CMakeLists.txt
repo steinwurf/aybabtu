@@ -62,38 +62,38 @@ target_link_libraries(aybabtu PRIVATE steinwurf::platform)
 # Check Accelerations
 include(CheckCXXCompilerFlag)
 
-# if(CMAKE_C_COMPILER_ID MATCHES "GNU|AppleClang|Clang")
-# # SSE2
-# check_cxx_compiler_flag("-Werror -msse2" HAS_SSE2)
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|AppleClang|Clang")
+    # # SSE2
+    # check_cxx_compiler_flag("-Werror -msse2" HAS_SSE2)
 
-# if(HAS_SSE2)
-# file(GLOB_RECURSE sse2 ./src/*sse2.cpp)
-# set_source_files_properties(${sse2} PROPERTIES COMPILE_FLAGS -msse2)
-# endif()
+    # if(HAS_SSE2)
+    # file(GLOB_RECURSE sse2 ./src/*sse2.cpp)
+    # set_source_files_properties(${sse2} PROPERTIES COMPILE_FLAGS -msse2)
+    # endif()
 
-# # SSSE3
-# check_cxx_compiler_flag("-Werror -mssse3" HAS_SSSE3)
+    # # SSSE3
+    # check_cxx_compiler_flag("-Werror -mssse3" HAS_SSSE3)
 
-# if(HAS_SSSE3)
-# file(GLOB_RECURSE ssse3 ./src/*ssse3.cpp)
-# set_source_files_properties(${ssse3} PROPERTIES COMPILE_FLAGS -mssse3)
-# endif()
+    # if(HAS_SSSE3)
+    # file(GLOB_RECURSE ssse3 ./src/*ssse3.cpp)
+    # set_source_files_properties(${ssse3} PROPERTIES COMPILE_FLAGS -mssse3)
+    # endif()
 
-# # SSE4.2
-# check_cxx_compiler_flag("-Werror -msse4.2" HAS_SSE42)
+    # # SSE4.2
+    # check_cxx_compiler_flag("-Werror -msse4.2" HAS_SSE42)
 
-# if(HAS_SSE42)
-# file(GLOB_RECURSE sse42 ./src/*sse42.cpp)
-# set_source_files_properties(${sse42} PROPERTIES COMPILE_FLAGS -msse4.2)
-# endif()
+    # if(HAS_SSE42)
+    # file(GLOB_RECURSE sse42 ./src/*sse42.cpp)
+    # set_source_files_properties(${sse42} PROPERTIES COMPILE_FLAGS -msse4.2)
+    # endif()
 
-# # AVX2
-# check_cxx_compiler_flag("-Werror -mavx2" HAS_AVX2)
+    # AVX2
+    check_cxx_compiler_flag("-Werror -mavx2" HAS_AVX2)
 
-# if(HAS_AVX2)
-# file(GLOB_RECURSE avx2 ./src/*avx2.cpp)
-# set_source_files_properties(${avx2} PROPERTIES COMPILE_FLAGS -mavx2)
-# endif()
+    if(HAS_AVX2)
+        file(GLOB_RECURSE avx2 ./src/*avx2.cpp)
+        set_source_files_properties(${avx2} PROPERTIES COMPILE_FLAGS -mavx2)
+    endif()
 
 # # NEON
 # check_cxx_compiler_flag("-Werror -mfpu=neon" HAS_NEON)
@@ -102,15 +102,16 @@ include(CheckCXXCompilerFlag)
 # file(GLOB_RECURSE neon ./src/*neon.cpp)
 # set_source_files_properties(${neon} PROPERTIES COMPILE_FLAGS -mfpu=neon)
 # endif()
-# elseif(CMAKE_C_COMPILER_ID MATCHES "MSVC")
-# # AVX2
-# check_cxx_compiler_flag(/arch:AVX2 HAS_AVX2)
+elseif(CMAKE_C_COMPILER_ID MATCHES "MSVC")
+    # AVX2
+    check_cxx_compiler_flag(/arch:AVX2 HAS_AVX2)
 
-# if(HAS_AVX2)
-# file(GLOB_RECURSE avx2 ./src/*avx2.cpp)
-# set_source_files_properties(${avx2} PROPERTIES COMPILE_FLAGS /arch:AVX2)
-# endif()
-# endif()
+    if(HAS_AVX2)
+        file(GLOB_RECURSE avx2 ./src/*avx2.cpp)
+        set_source_files_properties(${avx2} PROPERTIES COMPILE_FLAGS /arch:AVX2)
+    endif()
+endif()
+
 target_include_directories(aybabtu INTERFACE src)
 target_compile_features(aybabtu PUBLIC cxx_std_11)
 add_library(steinwurf::aybabtu ALIAS aybabtu)

@@ -9,39 +9,40 @@
 #include <string>
 #include <vector>
 
-#include <cpuid/cpuinfo.hpp>
-
 namespace aybabtu
 {
 inline namespace STEINWURF_AYBABTU_VERSION
 {
 struct base64
 {
-    /// Create a base64 encoded string from a pointer and size.
+    /// The size of the encoded data.
+    /// @param size size of the data to be encoded
+    /// @return the size of the encoded string
+    static std::size_t encode_size(std::size_t size);
+
+    /// The size of the decoded data.
+    /// @param encoded_string the encoded string
+    /// @param size the size of the encoded string
+    /// @return the size of the decoded data in bytes
+    static std::size_t decode_size(const char* encoded_string,
+                                   std::size_t size);
+
+    /// Encode a pointer and size to a base64 encoded string
     ///
     /// @param data a pointer to the data
     /// @param size the size of the data in bytes
-    static std::string encode(const uint8_t* data, std::size_t size);
-
-    /// Compute the size of the decoded data.
-    /// Each Base64 digit represents exactly 6 bits of data. So, three 8-bits
-    /// bytes of data (3×8 bits = 24 bits) can be
-    /// represented by four 6-bit Base64 digits (4×6 = 24 bits). This means that
-    /// the Base64 version of a string or file will be at least 133% the size of
-    /// its source (a ~33% increase).
-    /// @param encoded_data the encoded data
-    /// @return the size of the decoded data in bytes
-    static std::size_t compute_size(const std::string& encoded_data);
+    /// @param out the output string
+    /// @return the number of bytes written to the data pointer
+    static std::size_t encode(const uint8_t* data, std::size_t size, char* out);
 
     /// Decode a base64 encoded string to a given pointer
     ///
+    /// @param encoded_string the encoded string
+    /// @param size the size of the encoded string
     /// @param data a pointer to the data
-    /// @param encoded_data A string containing the encoded data.
     /// @return the number of bytes written to the data pointer
-    static std::size_t decode(uint8_t* data, const std::string& encoded_data);
-
-private:
-    static const cpuid::cpuinfo cpuinfo; // can't be initialized here
+    static std::size_t decode(const char* encoded_string, std::size_t size,
+                              uint8_t* data);
 };
 }
 }
