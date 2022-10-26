@@ -9,13 +9,14 @@
 
 int main()
 {
-    std::vector<uint8_t> data { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-    auto encoded = aybabtu::base64::encode(data);
+    std::vector<uint8_t> buffer{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    auto encoded = aybabtu::base64::encode(buffer.data(), buffer.size());
     std::cout << "base64 encoded string: " << encoded << std::endl;
     std::cout << "Trying to decode..." << std::endl;
-    auto result = aybabtu::base64::decode(encoded);
+    std::vector<uint8_t> decoded(aybabtu::base64::compute_size(encoded));
+    aybabtu::base64::decode(decoded.data(), encoded);
 
-    if (result == data)
+    if (decoded == buffer)
     {
         std::cout << "Decoded correctly." << std::endl;
     }

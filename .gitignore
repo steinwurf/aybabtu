@@ -58,3 +58,8 @@ local.properties
 *.log
 *.vcxproj*
 VSProjects
+
+.vscode
+
+benchmark_results/
+virtualenv-plots/
