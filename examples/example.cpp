@@ -9,7 +9,9 @@
 
 int main()
 {
-    std::vector<uint8_t> buffer{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    std::vector<uint8_t> buffer{0x02, 0x59, 0x58, 0xa2, 0xea, 0xc1,
+                                0x6a, 0xc7, 0x80, 0xad, 0xe0, 0x5e,
+                                0x96, 0x89, 0xe0, 0x4e, 0x85, 0x2c};
     auto encoded = aybabtu::base64::encode(buffer.data(), buffer.size());
     std::cout << "base64 encoded string: " << encoded << std::endl;
     std::cout << "Trying to decode..." << std::endl;
