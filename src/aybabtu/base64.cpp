@@ -4,6 +4,9 @@
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
 
 #include "base64.hpp"
+#include "base64_basic.hpp"
+
+#include <platform/config.hpp>
 
 #include <cassert>
 #include <cstdint>
@@ -14,44 +17,39 @@ namespace aybabtu
 {
 inline namespace STEINWURF_AYBABTU_VERSION
 {
-static const std::string base64_chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
+const cpuid::cpuinfo base64::cpuinfo{};
 std::string base64::encode(const uint8_t* data, std::size_t size)
+
 {
-    std::string result;
-    for (uint32_t i = 0; i < size; i += 3)
-    {
-        uint8_t b = (data[i] & 0xFC) >> 2;
-        result += base64_chars[b];
-
-        b = (data[i] & 0x03) << 4;
-        if ((i + 1) < size)
-        {
-            b |= (data[i + 1] & 0xF0) >> 4;
-            result += base64_chars[b];
-            b = (data[i + 1] & 0x0F) << 2;
-            if (i + 2 < size)
-            {
-                b |= (data[i + 2] & 0xC0) >> 6;
-                result += base64_chars[b];
-                b = data[i + 2] & 0x3F;
-                result += base64_chars[b];
-            }
-            else
-            {
-                result += base64_chars[b];
-                result += '=';
-            }
-        }
-        else
-        {
-            result += base64_chars[b];
-            result += "==";
-        }
-    }
-
-    return result;
+    return base64_basic::encode(data, size);
+    // #if defined(PLATFORM_X86)
+    //     if (cpuinfo.has_avx2())
+    //     {
+    //         return base64_basic::encode(data, size);
+    //         // return base64_avx2::encode(data, size);
+    //     }
+    //     else if (cpuinfo.has_sse2())
+    //     {
+    //         return base64_basic::encode(data, size);
+    //         // return base64_sse2::encode(data, size);
+    //     }
+    //     else
+    //     {
+    //         return base64_basic::encode(data, size);
+    //     }
+    // #elif defined(PLATFORM_NEON)
+    //     if (cpuinfo.has_neon())
+    //     {
+    //         return base64_basic::encode(data, size);
+    //         // return base64_neon::encode(data, size);
+    //     }
+    //     else
+    //     {
+    //         return base64_basic::encode(data, size);
+    //     }
+    // #else
+    //     return base64_basic::encode(data, size);
+    // #endif
 }
 
 std::size_t base64::compute_size(const std::string& encoded_data)
@@ -78,28 +76,35 @@ std::size_t base64::compute_size(const std::string& encoded_data)
 
 std::size_t base64::decode(uint8_t* data, const std::string& encoded_data)
 {
-    assert(encoded_data.size() % 4 == 0);
-
-    std::size_t position = 0;
-    uint8_t b[4];
-    for (std::size_t i = 0U; i < encoded_data.length(); i += 4)
-    {
-        b[0] = (uint8_t)base64_chars.find(encoded_data[i]);
-        b[1] = (uint8_t)base64_chars.find(encoded_data[i + 1]);
-        b[2] = (uint8_t)base64_chars.find(encoded_data[i + 2]);
-        b[3] = (uint8_t)base64_chars.find(encoded_data[i + 3]);
-        data[position++] = (b[0] << 2) | (b[1] >> 4);
-        if (b[2] < 64)
-        {
-            data[position++] = (b[1] << 4) | (b[2] >> 2);
-            if (b[3] < 64)
-            {
-                data[position++] = (b[2] << 6) | b[3];
-            }
-        }
-    }
-
-    return position;
+    return base64_basic::decode(data, encoded_data);
+    // #if defined(PLATFORM_X86)
+    //     if (cpuinfo.has_avx2())
+    //     {
+    //         return base64_basic::decode(data, encoded_data);
+    //         // return base64_avx2::decode(data, encoded_data);
+    //     }
+    //     else if (cpuinfo.has_sse2())
+    //     {
+    //         return base64_basic::decode(data, encoded_data);
+    //         // return base64_sse2::decode(data, encoded_data);
+    //     }
+    //     else
+    //     {
+    //         return base64_basic::decode(data, encoded_data);
+    //     }
+    // #elif defined(PLATFORM_NEON)
+    //     if (cpuinfo.has_neon())
+    //     {
+    //         return base64_basic::decode(data, encoded_data);
+    //         // return base64_neon::decode(data, encoded_data);
+    //     }
+    //     else
+    //     {
+    //         return base64_basic::decode(data, encoded_data);
+    //     }
+    // #else
+    //     return base64_basic::decode(data, encoded_data);
+    // #endif
 }
 }
 }

@@ -2,9 +2,9 @@
 # encoding: utf-8
 
 bld.stlib(
-    features='cxx',
-    source=bld.path.ant_glob('**/*.cpp'),
-    target='aybabtu',
-    use=[],
-    export_includes=['..']
+    features="cxx",
+    source=bld.path.ant_glob("**/*.cpp"),
+    target="aybabtu",
+    use=["cpuid", "platform_includes"],
+    export_includes=[".."],
 )
