@@ -25,9 +25,6 @@ aybabtu
 .. |Raspberry Pi| image:: https://github.com/steinwurf/aybabtu/actions/workflows/raspberry_pi.yml/badge.svg
    :target: https://github.com/steinwurf/aybabtu/actions/workflows/raspberry_pi.yml
 
-.. |CMake Examples| image:: https://github.com/steinwurf/aybabtu/actions/workflows/cmake_examples.yml/badge.svg
-   :target: https://github.com/steinwurf/aybabtu/actions/workflows/cmake_examples.yml
-
 .. |Clang Format| image:: https://github.com/steinwurf/aybabtu/actions/workflows/clang-format.yml/badge.svg
    :target: https://github.com/steinwurf/aybabtu/actions/workflows/clang-format.yml
 
