@@ -12,7 +12,7 @@
 
 static void encode(benchmark::State& state, std::size_t size)
 {
-    state.counters["size"] = size;
+    state.counters["size"] = (double)size;
 
     std::vector<uint8_t> data_in(size);
     std::generate(data_in.begin(), data_in.end(), rand);
@@ -27,7 +27,7 @@ static void encode(benchmark::State& state, std::size_t size)
 
 static void decode(benchmark::State& state, std::size_t size)
 {
-    state.counters["size"] = size;
+    state.counters["size"] = (double)size;
 
     std::vector<uint8_t> data_in(size);
     std::generate(data_in.begin(), data_in.end(), rand);

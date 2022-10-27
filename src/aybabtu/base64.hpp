@@ -28,8 +28,7 @@ struct base64
     /// @param encoded_string the encoded string
     /// @param size the size of the encoded string
     /// @return the size of the decoded data in bytes
-    constexpr static std::size_t decode_size(const char* encoded_string,
-                                             std::size_t size)
+    static std::size_t decode_size(const char* encoded_string, std::size_t size)
     {
         assert(size % 4 == 0);
         // Each Base64 digit represents exactly 6 bits of data. So, three 8-bits
