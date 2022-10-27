@@ -2,7 +2,7 @@
 aybabtu
 =======
 
-|Linux make-specs| |Windows make-specs| |MacOS make-specs| |Linux CMake| |Windows CMake| |MacOS CMake| |Raspberry Pi| |CMake Examples| |Valgrind| |No Assertions| |Clang Format| |Cppcheck|
+|Linux make-specs| |Windows make-specs| |MacOS make-specs| |Linux CMake| |Windows CMake| |MacOS CMake| |Raspberry Pi| |Valgrind| |No Assertions| |Clang Format| |Cppcheck|
 
 .. |Linux make-specs| image:: https://github.com/steinwurf/aybabtu/actions/workflows/linux_mkspecs.yml/badge.svg
    :target: https://github.com/steinwurf/aybabtu/actions/workflows/linux_mkspecs.yml
