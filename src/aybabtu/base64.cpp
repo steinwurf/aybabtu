@@ -37,10 +37,10 @@ std::size_t base64::decode_size(const char* encoded_string, std::size_t size)
     std::size_t result = size / 4 * 3;
 
     // If the last two characters are == then we have two padding bytes
-    if (encoded_string[size - 1] == '=')
+    if (size >= 1 && encoded_string[size - 1] == '=')
     {
         result--;
-        if (encoded_string[size - 2] == '=')
+        if (size >= 2 && encoded_string[size - 2] == '=')
         {
             result--;
         }
