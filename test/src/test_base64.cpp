@@ -90,8 +90,7 @@ TEST(test_base64, know_results)
                             encoding_expectation.size(), decoded.data());
     EXPECT_EQ(decoding_expectation, decoded);
 
-    char encoded[aybabtu::base64::encode_size(size)];
-    aybabtu::base64::encode(decoding_expectation.data(),
-                            decoding_expectation.size(), encoded);
-    EXPECT_EQ(encoding_expectation, std::string(encoded, sizeof(encoded)));
+    auto encoded = aybabtu::base64::encode(decoding_expectation.data(),
+                                           decoding_expectation.size());
+    EXPECT_EQ(encoding_expectation, encoded);
 }
