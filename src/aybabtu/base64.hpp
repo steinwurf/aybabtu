@@ -50,6 +50,28 @@ struct base64
         return result;
     }
 
+    /// Encode data into a base64 string.
+    /// @param data the data to be encoded
+    /// @param size the size of the data to be encoded
+    /// @return the encoded string
+    static std::string encode(const uint8_t* data, std::size_t size)
+    {
+        char* out = new char[encode_size(size)];
+        std::size_t encoded_size = encode(data, size, out);
+        std::string result(out, encoded_size);
+        delete[] out;
+        return result;
+    }
+
+    /// Decode base64 string into data.
+    /// @param encoded_string the encoded string
+    /// @param data the data to be decoded
+    /// @return the size of the decoded data
+    static std::size_t decode(const std::string& encoded_string, uint8_t* data)
+    {
+        return decode(encoded_string.data(), encoded_string.size(), data);
+    }
+
     /// Encode a pointer and size to a base64 encoded string
     ///
     /// @param data a pointer to the data

@@ -13,12 +13,13 @@
 static void test_encode_decode(const uint8_t* data, std::size_t size)
 {
     SCOPED_TRACE(testing::Message() << "size: " << size);
-    char encoded[aybabtu::base64::encode_size(size)];
-    aybabtu::base64::encode(data, size, encoded);
-    auto decoded_size = aybabtu::base64::decode_size(encoded, sizeof(encoded));
+    auto encoded = aybabtu::base64::encode(data, size);
+    EXPECT_EQ(encoded.size(), aybabtu::base64::encode_size(size));
+    auto decoded_size =
+        aybabtu::base64::decode_size(encoded.data(), encoded.size());
     std::vector<uint8_t> decoded(decoded_size);
     auto written =
-        aybabtu::base64::decode(encoded, sizeof(encoded), decoded.data());
+        aybabtu::base64::decode(encoded.data(), encoded.size(), decoded.data());
     EXPECT_EQ(written, decoded_size);
     ASSERT_EQ(decoded_size, size);
     EXPECT_EQ(0, memcmp(data, decoded.data(), size));

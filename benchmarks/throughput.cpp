@@ -16,11 +16,12 @@ static void encode(benchmark::State& state, std::size_t size)
 
     std::vector<uint8_t> data_in(size);
     std::generate(data_in.begin(), data_in.end(), rand);
-    char data_out[aybabtu::base64::encode_size(size)];
+    char* data_out = new char[aybabtu::base64::encode_size(size)];
     for (auto _ : state)
     {
         aybabtu::base64::encode(data_in.data(), data_in.size(), data_out);
     }
+    delete[] data_out;
 
     state.SetBytesProcessed(size * state.iterations());
 }
@@ -32,7 +33,7 @@ static void decode(benchmark::State& state, std::size_t size)
     std::vector<uint8_t> data_in(size);
     std::generate(data_in.begin(), data_in.end(), rand);
 
-    char encoded[aybabtu::base64::encode_size(size)];
+    char* encoded = new char[aybabtu::base64::encode_size(size)];
     aybabtu::base64::encode(data_in.data(), data_in.size(), encoded);
 
     std::vector<uint8_t> data_out(size);
@@ -41,6 +42,8 @@ static void decode(benchmark::State& state, std::size_t size)
     {
         aybabtu::base64::decode(encoded, sizeof(encoded), data_out.data());
     }
+
+    delete[] encoded;
 
     state.SetBytesProcessed(size * state.iterations());
 }

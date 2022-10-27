@@ -255,7 +255,6 @@ void base64_stream_encode_final(size_t carry, size_t bytes, uint8_t* out,
         *outlen += 2;
         return;
     }
-    *outlen = 0;
 }
 
 std::size_t base64_avx2::encode(const uint8_t* data, std::size_t size,
