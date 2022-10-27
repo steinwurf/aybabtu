@@ -27,10 +27,10 @@ struct base64_basic
     ///
     /// @param encoded_string the encoded string
     /// @param size the size of the encoded string
-    /// @param data a pointer to the data
+    /// @param out a pointer to the output data
     /// @return the number of bytes written to the data pointer
     static std::size_t decode(const char* encoded_string, std::size_t size,
-                              uint8_t* data);
+                              uint8_t* out);
 };
 }
 }

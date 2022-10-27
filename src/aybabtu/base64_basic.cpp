@@ -57,7 +57,7 @@ std::size_t base64_basic::encode(const uint8_t* data, std::size_t size,
 }
 
 std::size_t base64_basic::decode(const char* encoded_string, std::size_t size,
-                                 uint8_t* data)
+                                 uint8_t* out)
 
 {
     assert(size % 4 == 0);
@@ -70,13 +70,13 @@ std::size_t base64_basic::decode(const char* encoded_string, std::size_t size,
         b[1] = (uint8_t)base64_chars.find(encoded_string[i + 1]);
         b[2] = (uint8_t)base64_chars.find(encoded_string[i + 2]);
         b[3] = (uint8_t)base64_chars.find(encoded_string[i + 3]);
-        data[position++] = (b[0] << 2) | (b[1] >> 4);
+        out[position++] = (b[0] << 2) | (b[1] >> 4);
         if (b[2] < 64)
         {
-            data[position++] = (b[1] << 4) | (b[2] >> 2);
+            out[position++] = (b[1] << 4) | (b[2] >> 2);
             if (b[3] < 64)
             {
-                data[position++] = (b[2] << 6) | b[3];
+                out[position++] = (b[2] << 6) | b[3];
             }
         }
     }

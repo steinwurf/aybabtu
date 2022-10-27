@@ -42,25 +42,25 @@ std::size_t base64::encode(const uint8_t* data, std::size_t size, char* out)
 }
 
 std::size_t base64::decode(const char* encoded_string, std::size_t size,
-                           uint8_t* data)
+                           uint8_t* out)
 {
 #if defined(PLATFORM_X86)
-    // if (base64_avx2::is_compiled() && cpuinfo.has_avx2())
-    // {
-    //     return base64_avx2::decode(encoded_string, size, data);
-    // }
+    if (base64_avx2::is_compiled() && cpuinfo.has_avx2())
+    {
+        return base64_avx2::decode(encoded_string, size, out);
+    }
 
     // if (base64_sse2::is_compiled() && cpuinfo.has_sse2())
     // {
-    //     return base64_sse2::decode(encoded_string, size, data);
+    //     return base64_sse2::decode(encoded_string, size, out);
     // }
 #elif defined(PLATFORM_ARM)
     // if (base64_neon::is_compiled() && cpuinfo.has_neon())
     // {
-    //     return base64_neon::decode(encoded_string, size, data);
+    //     return base64_neon::decode(encoded_string, size, out);
     // }
 #endif
-    return base64_basic::decode(encoded_string, size, data);
+    return base64_basic::decode(encoded_string, size, out);
 }
 }
 }

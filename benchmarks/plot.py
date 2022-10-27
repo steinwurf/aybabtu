@@ -87,7 +87,7 @@ def plot_throughput(df: pd.DataFrame):
 
     for key, group in op:
 
-        title = key[0].replace("_", " ").capitalize()
+        title = key.replace("_", " ").capitalize()
 
         config = textwrap.wrap(
             ", ".join(
@@ -101,7 +101,7 @@ def plot_throughput(df: pd.DataFrame):
             .encode(
                 x=alt.X("run_index:Q", axis=alt.Axis(title="Runs [-]")),
                 y=alt.Y("throughput:Q", axis=alt.Axis(title="Throughput [MB/s]")),
-                color=alt.Color("name:N", legend=alt.Legend(title="Encode / Decode")),
+                color=alt.Color("name:N", legend=alt.Legend(title="Configuration")),
             )
             .properties(title={"text": title, "subtitle": config})
         )
