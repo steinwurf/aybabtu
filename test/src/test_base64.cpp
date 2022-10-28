@@ -65,7 +65,7 @@ TEST(test_base64, encode_decode)
         test_encode_decode(buffer.data(), buffer.size());
     }
     {
-        for (uint32_t i = 0; i < 10; ++i)
+        for (uint32_t i = 0; i < 1000; ++i)
         {
             std::vector<uint8_t> buffer(rand() % 10000);
             std::generate(buffer.begin(), buffer.end(), rand);

@@ -13,15 +13,19 @@ namespace aybabtu
 {
 inline namespace STEINWURF_AYBABTU_VERSION
 {
+namespace detail
+{
 struct base64_avx2
 {
-    static std::size_t encode(const uint8_t* data, std::size_t size, char* out);
+    static std::size_t encode(const uint8_t* src, std::size_t size,
+                              uint8_t* out);
 
-    static std::size_t decode(const char* encoded_string, std::size_t size,
+    static std::size_t decode(const uint8_t* src, std::size_t size,
                               uint8_t* out);
 
     /// @return whether this cpu acceralation is compiled or not
     static bool is_compiled();
 };
+}
 }
 }

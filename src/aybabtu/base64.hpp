@@ -64,12 +64,12 @@ struct base64
     }
 
     /// Decode base64 string into data.
-    /// @param encoded_string the encoded string
+    /// @param string the encoded string
     /// @param data the data to be decoded
     /// @return the size of the decoded data
-    static std::size_t decode(const std::string& encoded_string, uint8_t* data)
+    static std::size_t decode(const std::string& string, uint8_t* data)
     {
-        return decode(encoded_string.data(), encoded_string.size(), data);
+        return decode(string.data(), string.size(), data);
     }
 
     /// Encode a pointer and size to a base64 encoded string
@@ -82,11 +82,11 @@ struct base64
 
     /// Decode a base64 encoded string to a given pointer
     ///
-    /// @param encoded_string the encoded string
+    /// @param string the encoded string
     /// @param size the size of the encoded string
     /// @param out a pointer to the output data
     /// @return the number of bytes written to the data pointer
-    static std::size_t decode(const char* encoded_string, std::size_t size,
+    static std::size_t decode(const char* string, std::size_t size,
                               uint8_t* out);
 };
 }
