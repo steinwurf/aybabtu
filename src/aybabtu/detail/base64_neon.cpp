@@ -31,6 +31,25 @@ namespace detail
 // https://github.com/aklomp/base64 (published under BSD)
 // The code has been modified to fit the aybabtu library.
 
+#if !(defined(__arm64__) || defined(__aarch64__))
+// NEON32 only supports 64-bit wide lookups in 128-bit tables. Emulate
+// the NEON64 `vqtbl1q_u8` intrinsic to do 128-bit wide lookups.
+static inline uint8x16_t vqtbl1q_u8(const uint8x16_t lut,
+                                    const uint8x16_t indices)
+{
+    uint8x8x2_t lut2;
+    uint8x8x2_t result;
+
+    lut2.val[0] = vget_low_u8(lut);
+    lut2.val[1] = vget_high_u8(lut);
+
+    result.val[0] = vtbl2_u8(lut2, vget_low_u8(indices));
+    result.val[1] = vtbl2_u8(lut2, vget_high_u8(indices));
+
+    return vcombine_u8(result.val[0], result.val[1]);
+}
+#endif
+
 static inline uint8x16x4_t enc_reshuffle(uint8x16x3_t in)
 {
     uint8x16x4_t out;
