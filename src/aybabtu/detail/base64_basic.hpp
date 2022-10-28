@@ -5,9 +5,9 @@
 
 #pragma once
 
+#include "../version.hpp"
+
 #include <cstdint>
-#include <string>
-#include <vector>
 
 namespace aybabtu
 {

@@ -5,6 +5,8 @@
 
 #include "tables.hpp"
 
+#include "../version.hpp"
+
 #include <cstdint>
 
 namespace aybabtu

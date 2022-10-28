@@ -5,21 +5,19 @@
 
 #pragma once
 
-#include "../version.hpp"
-
-#include <cstdint>
+#include "version.hpp"
 
 namespace aybabtu
 {
 inline namespace STEINWURF_AYBABTU_VERSION
 {
-namespace detail
+enum class simd
 {
-struct tables
-{
-    static const uint8_t encode[];
-    static const uint8_t decode[];
+    auto_,
+    none,
+    ssse3,
+    avx2,
+    neon
 };
-}
 }
 }

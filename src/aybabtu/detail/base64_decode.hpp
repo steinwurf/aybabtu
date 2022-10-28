@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "../version.hpp"
 #include "tables.hpp"
 
 #include <cassert>

@@ -15,7 +15,7 @@ inline namespace STEINWURF_AYBABTU_VERSION
 {
 namespace detail
 {
-struct base64_avx2
+struct base64_ssse3
 {
     static std::size_t encode(const uint8_t* src, std::size_t size,
                               uint8_t* out);

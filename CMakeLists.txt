@@ -71,13 +71,13 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|AppleClang|Clang")
     # set_source_files_properties(${sse2} PROPERTIES COMPILE_FLAGS -msse2)
     # endif()
 
-    # # SSSE3
-    # check_cxx_compiler_flag("-Werror -mssse3" HAS_SSSE3)
+    # SSSE3
+    check_cxx_compiler_flag("-Werror -mssse3" HAS_SSSE3)
 
-    # if(HAS_SSSE3)
-    # file(GLOB_RECURSE ssse3 ./src/*ssse3.cpp)
-    # set_source_files_properties(${ssse3} PROPERTIES COMPILE_FLAGS -mssse3)
-    # endif()
+    if(HAS_SSSE3)
+        file(GLOB_RECURSE ssse3 ./src/*ssse3.cpp)
+        set_source_files_properties(${ssse3} PROPERTIES COMPILE_FLAGS -mssse3)
+    endif()
 
     # # SSE4.2
     # check_cxx_compiler_flag("-Werror -msse4.2" HAS_SSE42)
@@ -95,13 +95,13 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|AppleClang|Clang")
         set_source_files_properties(${avx2} PROPERTIES COMPILE_FLAGS -mavx2)
     endif()
 
-# # NEON
-# check_cxx_compiler_flag("-Werror -mfpu=neon" HAS_NEON)
+    # NEON
+    check_cxx_compiler_flag("-Werror -mfpu=neon" HAS_NEON)
 
-# if(HAS_NEON)
-# file(GLOB_RECURSE neon ./src/*neon.cpp)
-# set_source_files_properties(${neon} PROPERTIES COMPILE_FLAGS -mfpu=neon)
-# endif()
+    if(HAS_NEON)
+        file(GLOB_RECURSE neon ./src/*neon.cpp)
+        set_source_files_properties(${neon} PROPERTIES COMPILE_FLAGS -mfpu=neon)
+    endif()
 elseif(CMAKE_C_COMPILER_ID MATCHES "MSVC")
     # AVX2
     check_cxx_compiler_flag(/arch:AVX2 HAS_AVX2)

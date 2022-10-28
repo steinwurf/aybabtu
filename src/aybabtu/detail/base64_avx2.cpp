@@ -4,6 +4,7 @@
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
 
 #include "base64_avx2.hpp"
+#include "../version.hpp"
 #include "base64_decode.hpp"
 #include "base64_encode.hpp"
 
@@ -11,8 +12,6 @@
 
 #include <cassert>
 #include <cstdint>
-#include <string>
-#include <vector>
 
 // Include x86 intrinsics for GCC-compatible compilers on x86/x86_64
 #if defined(PLATFORM_GCC_COMPATIBLE_X86)
@@ -31,6 +30,7 @@ namespace detail
 
 // This code borrows from code from Alfred Klomp's library
 // https://github.com/aklomp/base64 (published under BSD)
+// The code has been modified to fit the aybabtu library.
 
 static inline __m256i enc_translate(const __m256i in)
 {
@@ -240,23 +240,24 @@ static inline void decode_loop_avx2(const uint8_t** src, std::size_t& remaining,
     // two end-of-string markers.)
     size_t rounds = (remaining - 13) / 32;
 
+    const __m256i lut_lo = _mm256_setr_epi8(
+        0x15, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x13, 0x1A,
+        0x1B, 0x1B, 0x1B, 0x1A, 0x15, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11,
+        0x11, 0x11, 0x13, 0x1A, 0x1B, 0x1B, 0x1B, 0x1A);
+
+    const __m256i lut_hi = _mm256_setr_epi8(
+        0x10, 0x10, 0x01, 0x02, 0x04, 0x08, 0x04, 0x08, 0x10, 0x10, 0x10, 0x10,
+        0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x01, 0x02, 0x04, 0x08, 0x04, 0x08,
+        0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10);
+
+    const __m256i lut_roll = _mm256_setr_epi8(
+        0, 16, 19, 4, -65, -65, -71, -71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 19, 4,
+        -65, -65, -71, -71, 0, 0, 0, 0, 0, 0, 0, 0);
+
+    const __m256i mask_2F = _mm256_set1_epi8(0x2F);
+
     while (rounds > 0)
     {
-        const __m256i lut_lo = _mm256_setr_epi8(
-            0x15, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x13,
-            0x1A, 0x1B, 0x1B, 0x1B, 0x1A, 0x15, 0x11, 0x11, 0x11, 0x11, 0x11,
-            0x11, 0x11, 0x11, 0x11, 0x13, 0x1A, 0x1B, 0x1B, 0x1B, 0x1A);
-
-        const __m256i lut_hi = _mm256_setr_epi8(
-            0x10, 0x10, 0x01, 0x02, 0x04, 0x08, 0x04, 0x08, 0x10, 0x10, 0x10,
-            0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x01, 0x02, 0x04, 0x08,
-            0x04, 0x08, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10);
-
-        const __m256i lut_roll = _mm256_setr_epi8(
-            0, 16, 19, 4, -65, -65, -71, -71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 19,
-            4, -65, -65, -71, -71, 0, 0, 0, 0, 0, 0, 0, 0);
-
-        const __m256i mask_2F = _mm256_set1_epi8(0x2F);
 
         // Load input:
         __m256i str = _mm256_loadu_si256((__m256i*)*src);

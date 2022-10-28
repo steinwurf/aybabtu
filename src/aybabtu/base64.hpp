@@ -8,7 +8,10 @@
 #include <cassert>
 #include <cstdint>
 #include <string>
-#include <vector>
+
+#include "simd.hpp"
+
+#include "version.hpp"
 
 namespace aybabtu
 {
@@ -53,11 +56,14 @@ struct base64
     /// Encode data into a base64 string.
     /// @param data the data to be encoded
     /// @param size the size of the data to be encoded
+    /// @param simd the simd instruction set to use, by default auto is used
+    ///             which will select the best available instruction set.
     /// @return the encoded string
-    static std::string encode(const uint8_t* data, std::size_t size)
+    static std::string encode(const uint8_t* data, std::size_t size,
+                              simd simd = simd::auto_)
     {
         char* out = new char[encode_size(size)];
-        std::size_t encoded_size = encode(data, size, out);
+        std::size_t encoded_size = encode(data, size, out, simd);
         std::string result(out, encoded_size);
         delete[] out;
         return result;
@@ -66,10 +72,13 @@ struct base64
     /// Decode base64 string into data.
     /// @param string the encoded string
     /// @param data the data to be decoded
+    /// @param simd the simd instruction set to use, by default auto is used
+    ///             which will select the best available instruction set.
     /// @return the size of the decoded data
-    static std::size_t decode(const std::string& string, uint8_t* data)
+    static std::size_t decode(const std::string& string, uint8_t* data,
+                              simd simd = simd::auto_)
     {
-        return decode(string.data(), string.size(), data);
+        return decode(string.data(), string.size(), data, simd);
     }
 
     /// Encode a pointer and size to a base64 encoded string
@@ -77,17 +86,22 @@ struct base64
     /// @param data a pointer to the data
     /// @param size the size of the data in bytes
     /// @param out the output string
+    /// @param simd the simd instruction set to use, by default auto is used
+    ///             which will select the best available instruction set.
     /// @return the number of bytes written to the data pointer
-    static std::size_t encode(const uint8_t* data, std::size_t size, char* out);
+    static std::size_t encode(const uint8_t* data, std::size_t size, char* out,
+                              simd simd = simd::auto_);
 
     /// Decode a base64 encoded string to a given pointer
     ///
     /// @param string the encoded string
     /// @param size the size of the encoded string
     /// @param out a pointer to the output data
+    /// @param simd the simd instruction set to use, by default auto is used
+    ///             which will select the best available instruction set.
     /// @return the number of bytes written to the data pointer
     static std::size_t decode(const char* string, std::size_t size,
-                              uint8_t* out);
+                              uint8_t* out, simd simd = simd::auto_);
 };
 }
 }

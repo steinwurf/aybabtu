@@ -6,71 +6,103 @@
 #include <aybabtu/base64.hpp>
 
 #include <algorithm>
+#include <cpuid/cpuinfo.hpp>
 #include <vector>
 
 #include <gtest/gtest.h>
 
-static void test_encode_decode(const uint8_t* data, std::size_t size)
+static void test_encode_decode(const uint8_t* data, std::size_t size,
+                               aybabtu::simd simd)
 {
     SCOPED_TRACE(testing::Message() << "size: " << size);
-    auto encoded = aybabtu::base64::encode(data, size);
+    auto encoded = aybabtu::base64::encode(data, size, simd);
     EXPECT_EQ(encoded.size(), aybabtu::base64::encode_size(size));
     auto decoded_size =
         aybabtu::base64::decode_size(encoded.data(), encoded.size());
     std::vector<uint8_t> decoded(decoded_size);
-    auto written =
-        aybabtu::base64::decode(encoded.data(), encoded.size(), decoded.data());
+    auto written = aybabtu::base64::decode(encoded.data(), encoded.size(),
+                                           decoded.data(), simd);
     EXPECT_EQ(written, decoded_size);
     ASSERT_EQ(decoded_size, size);
     EXPECT_EQ(0, memcmp(data, decoded.data(), size));
 }
 
-TEST(test_base64, encode_decode)
+static void encode_decode_simd(aybabtu::simd simd)
 {
     {
         std::vector<uint8_t> buffer = {1};
-        test_encode_decode(buffer.data(), buffer.size());
+        test_encode_decode(buffer.data(), buffer.size(), simd);
     }
     {
         std::vector<uint8_t> buffer = {1, 2};
-        test_encode_decode(buffer.data(), buffer.size());
+        test_encode_decode(buffer.data(), buffer.size(), simd);
     }
     {
         std::vector<uint8_t> buffer = {1, 2, 3};
-        test_encode_decode(buffer.data(), buffer.size());
+        test_encode_decode(buffer.data(), buffer.size(), simd);
     }
     {
         std::vector<uint8_t> buffer(100, 100);
         std::generate(buffer.begin(), buffer.end(), rand);
-        test_encode_decode(buffer.data(), buffer.size());
+        test_encode_decode(buffer.data(), buffer.size(), simd);
     }
     {
         std::vector<uint8_t> buffer = {};
         std::generate(buffer.begin(), buffer.end(), rand);
-        test_encode_decode(buffer.data(), buffer.size());
+        test_encode_decode(buffer.data(), buffer.size(), simd);
     }
     {
         std::vector<uint8_t> buffer(100);
         std::generate(buffer.begin(), buffer.end(), rand);
-        test_encode_decode(buffer.data(), buffer.size());
+        test_encode_decode(buffer.data(), buffer.size(), simd);
     }
     {
         std::vector<uint8_t> buffer(1000);
         std::generate(buffer.begin(), buffer.end(), rand);
-        test_encode_decode(buffer.data(), buffer.size());
+        test_encode_decode(buffer.data(), buffer.size(), simd);
     }
     {
         std::vector<uint8_t> buffer(10000);
         std::generate(buffer.begin(), buffer.end(), rand);
-        test_encode_decode(buffer.data(), buffer.size());
+        test_encode_decode(buffer.data(), buffer.size(), simd);
     }
     {
         for (uint32_t i = 0; i < 1000; ++i)
         {
             std::vector<uint8_t> buffer(rand() % 10000);
             std::generate(buffer.begin(), buffer.end(), rand);
-            test_encode_decode(buffer.data(), buffer.size());
+            test_encode_decode(buffer.data(), buffer.size(), simd);
         }
+    }
+}
+
+TEST(test_base64, encode_decode)
+{
+    cpuid::cpuinfo cpu{};
+
+    {
+        SCOPED_TRACE(testing::Message() << "simd: auto");
+        encode_decode_simd(aybabtu::simd::auto_);
+    }
+    {
+
+        SCOPED_TRACE(testing::Message() << "simd: none");
+        encode_decode_simd(aybabtu::simd::none);
+    }
+    if (cpu.has_avx2())
+    {
+        SCOPED_TRACE(testing::Message() << "simd: avx2");
+        encode_decode_simd(aybabtu::simd::avx2);
+    }
+    if (cpu.has_ssse3())
+    {
+        SCOPED_TRACE(testing::Message() << "simd: ssse3");
+        encode_decode_simd(aybabtu::simd::ssse3);
+    }
+    if (cpu.has_neon())
+    {
+        SCOPED_TRACE(testing::Message() << "simd: neon");
+        encode_decode_simd(aybabtu::simd::neon);
     }
 }
 

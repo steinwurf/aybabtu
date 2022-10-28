@@ -7,6 +7,7 @@
 
 #include <cstring>
 #include <iostream>
+#include <vector>
 
 int main()
 {

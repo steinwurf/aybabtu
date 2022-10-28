@@ -7,6 +7,8 @@
 #include "base64_decode.hpp"
 #include "base64_encode.hpp"
 
+#include "../version.hpp"
+
 #include <cassert>
 #include <cstdint>
 

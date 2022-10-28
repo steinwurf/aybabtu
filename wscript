@@ -50,10 +50,8 @@ def build(bld):
 
     optimized_sources = {
         "detail/base64_avx2": ["-mavx2", "/arch:AVX2"],
-        # "detail/base64_neon": ["-mfpu=neon"],
-        # "detail/base64_sse2": ["-msse2"],
-        # "detail/base64_ssse3": ["-mssse3"],
-        # "detail/base64_sse42": ["-msse4.2"],
+        "detail/base64_neon": ["-mfpu=neon"],
+        "detail/base64_ssse3": ["-mssse3"],
     }
 
     libs = ["cpuid", "platform_includes"]
