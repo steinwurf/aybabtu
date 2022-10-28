@@ -4,82 +4,80 @@
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
 
 #include "base64.hpp"
+#include "detail/base64_avx2.hpp"
+#include "detail/base64_basic.hpp"
+#include "detail/base64_neon.hpp"
+#include "detail/base64_ssse3.hpp"
+
+#include "version.hpp"
+
+#include <cpuid/cpuinfo.hpp>
+#include <platform/config.hpp>
 
 #include <cassert>
+#include <cstdint>
 #include <string>
 #include <vector>
-#include <cstdint>
 
 namespace aybabtu
 {
-static const std::string base64_chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-std::string base64::encode(const std::vector<uint8_t>& buffer)
+inline namespace STEINWURF_AYBABTU_VERSION
 {
-    return base64::encode(buffer.data(), buffer.size());
+const static cpuid::cpuinfo cpuinfo{};
+
+std::size_t base64::encode(const uint8_t* data, std::size_t size, char* out,
+                           simd simd)
+{
+#if defined(PLATFORM_X86)
+    if ((simd == simd::auto_ && detail::base64_avx2::is_compiled() &&
+         cpuinfo.has_avx2()) ||
+        simd == simd::avx2)
+    {
+        return detail::base64_avx2::encode(data, size, (uint8_t*)out);
+    }
+    if ((simd == simd::auto_ && detail::base64_ssse3::is_compiled() &&
+         cpuinfo.has_ssse3()) ||
+        simd == simd::ssse3)
+    {
+        return detail::base64_ssse3::encode(data, size, (uint8_t*)out);
+    }
+#elif defined(PLATFORM_ARM)
+    if ((simd == simd::auto_ && detail::base64_neon::is_compiled() &&
+         cpuinfo.has_neon()) ||
+        simd == simd::neon)
+    {
+        return detail::base64_neon::encode(data, size, (uint8_t*)out);
+    }
+#endif
+    return detail::base64_basic::encode(data, size, (uint8_t*)out);
 }
 
-std::string base64::encode(const uint8_t* data, uint32_t size)
+std::size_t base64::decode(const char* string, std::size_t size, uint8_t* out,
+                           simd simd)
 {
-    std::string result;
-    for (uint32_t i = 0; i < size; i += 3)
+#if defined(PLATFORM_X86)
+    if ((simd == simd::auto_ && detail::base64_avx2::is_compiled() &&
+         cpuinfo.has_avx2()) ||
+        simd == simd::avx2)
     {
-        uint8_t b = (data[i] & 0xFC) >> 2;
-        result += base64_chars[b];
-
-        b = (data[i] & 0x03) << 4;
-        if ((i + 1) < size)
-        {
-            b |= (data[i + 1] & 0xF0) >> 4;
-            result += base64_chars[b];
-            b = (data[i + 1] & 0x0F) << 2;
-            if (i + 2 < size)
-            {
-                b |= (data[i + 2] & 0xC0) >> 6;
-                result += base64_chars[b];
-                b = data[i + 2] & 0x3F;
-                result += base64_chars[b];
-            }
-            else
-            {
-                result += base64_chars[b];
-                result += '=';
-            }
-        }
-        else
-        {
-            result += base64_chars[b];
-            result += "==";
-        }
+        return detail::base64_avx2::decode((const uint8_t*)string, size, out);
     }
 
-    return result;
+    if ((simd == simd::auto_ && detail::base64_ssse3::is_compiled() &&
+         cpuinfo.has_ssse3()) ||
+        simd == simd::ssse3)
+    {
+        return detail::base64_ssse3::decode((const uint8_t*)string, size, out);
+    }
+#elif defined(PLATFORM_ARM)
+    if ((simd == simd::auto_ && detail::base64_neon::is_compiled() &&
+         cpuinfo.has_neon()) ||
+        simd == simd::neon)
+    {
+        return detail::base64_neon::decode((const uint8_t*)string, size, out);
+    }
+#endif
+    return detail::base64_basic::decode((const uint8_t*)string, size, out);
 }
-
-std::vector<uint8_t> base64::decode(const std::string& encoded_data)
-{
-    assert(encoded_data.length() % 4 == 0);
-    std::vector<uint8_t> result;
-
-    uint8_t b[4];
-    for (uint32_t i = 0U; i < encoded_data.length(); i += 4)
-    {
-        b[0] = (uint8_t)base64_chars.find(encoded_data[i]);
-        b[1] = (uint8_t)base64_chars.find(encoded_data[i + 1]);
-        b[2] = (uint8_t)base64_chars.find(encoded_data[i + 2]);
-        b[3] = (uint8_t)base64_chars.find(encoded_data[i + 3]);
-        result.push_back((b[0] << 2) | (b[1] >> 4));
-        if (b[2] < 64)
-        {
-            result.push_back((b[1] << 4) | (b[2] >> 2));
-            if (b[3] < 64)
-            {
-                result.push_back((b[2] << 6) | b[3]);
-            }
-        }
-    }
-
-    return result;
 }
 }
