@@ -8,6 +8,12 @@ Latest
 ------
 * tbd
 
+3.0.0
+-----
+* Major: Completely redid the library; the API is now much more consistent and
+  easier to use. Also, the library now includes SIMD intrinsics for AVX2, SSSE3,
+  and NEON.
+
 2.2.0
 -----
 * Minor: Added install step to cmake.
