@@ -8,6 +8,7 @@
 #include "../version.hpp"
 
 #include <cstdint>
+#include <system_error>
 
 namespace aybabtu
 {
@@ -21,7 +22,7 @@ struct base64_neon
                               uint8_t* out);
 
     static std::size_t decode(const uint8_t* src, std::size_t size,
-                              uint8_t* out);
+                              uint8_t* out, std::error_code& error);
 
     /// @return whether this cpu acceralation is compiled or not
     static bool is_compiled();

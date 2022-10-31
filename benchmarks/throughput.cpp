@@ -40,11 +40,11 @@ static void decode(benchmark::State& state, std::size_t size)
     aybabtu::base64::encode(data_in.data(), data_in.size(), encoded.data());
 
     std::vector<uint8_t> data_out(size);
-
+    std::error_code error;
     for (auto _ : state)
     {
         benchmark::DoNotOptimize(aybabtu::base64::decode(
-            encoded.data(), encoded.size(), data_out.data()));
+            encoded.data(), encoded.size(), data_out.data(), error));
     }
 
     state.SetBytesProcessed(size * state.iterations());

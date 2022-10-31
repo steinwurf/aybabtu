@@ -14,10 +14,7 @@
 #include <cpuid/cpuinfo.hpp>
 #include <platform/config.hpp>
 
-#include <cassert>
 #include <cstdint>
-#include <string>
-#include <vector>
 
 namespace aybabtu
 {
@@ -53,31 +50,35 @@ std::size_t base64::encode(const uint8_t* data, std::size_t size, char* out,
 }
 
 std::size_t base64::decode(const char* string, std::size_t size, uint8_t* out,
-                           simd simd)
+                           std::error_code& error, simd simd) noexcept
 {
 #if defined(PLATFORM_X86)
     if ((simd == simd::auto_ && detail::base64_avx2::is_compiled() &&
          cpuinfo.has_avx2()) ||
         simd == simd::avx2)
     {
-        return detail::base64_avx2::decode((const uint8_t*)string, size, out);
+        return detail::base64_avx2::decode((const uint8_t*)string, size, out,
+                                           error);
     }
 
     if ((simd == simd::auto_ && detail::base64_ssse3::is_compiled() &&
          cpuinfo.has_ssse3()) ||
         simd == simd::ssse3)
     {
-        return detail::base64_ssse3::decode((const uint8_t*)string, size, out);
+        return detail::base64_ssse3::decode((const uint8_t*)string, size, out,
+                                            error);
     }
 #elif defined(PLATFORM_ARM)
     if ((simd == simd::auto_ && detail::base64_neon::is_compiled() &&
          cpuinfo.has_neon()) ||
         simd == simd::neon)
     {
-        return detail::base64_neon::decode((const uint8_t*)string, size, out);
+        return detail::base64_neon::decode((const uint8_t*)string, size, out,
+                                           error);
     }
 #endif
-    return detail::base64_basic::decode((const uint8_t*)string, size, out);
+    return detail::base64_basic::decode((const uint8_t*)string, size, out,
+                                        error);
 }
 }
 }

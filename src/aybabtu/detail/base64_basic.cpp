@@ -9,8 +9,8 @@
 
 #include "../version.hpp"
 
-#include <cassert>
 #include <cstdint>
+#include <system_error>
 
 namespace aybabtu
 {
@@ -31,10 +31,10 @@ std::size_t base64_basic::encode(const uint8_t* src, std::size_t size,
 }
 
 std::size_t base64_basic::decode(const uint8_t* src, std::size_t size,
-                                 uint8_t* out)
+                                 uint8_t* out, std::error_code& error)
 
 {
-    return base64_decode(&noop, src, size, out);
+    return base64_decode(&noop, src, size, out, error);
 }
 }
 }

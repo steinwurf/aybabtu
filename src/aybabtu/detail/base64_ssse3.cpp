@@ -300,9 +300,9 @@ std::size_t base64_ssse3::encode(const uint8_t* src, std::size_t size,
 }
 
 std::size_t base64_ssse3::decode(const uint8_t* src, std::size_t size,
-                                 uint8_t* out)
+                                 uint8_t* out, std::error_code& error)
 {
-    return base64_decode(&decode_loop_ssse3, src, size, out);
+    return base64_decode(&decode_loop_ssse3, src, size, out, error);
 }
 
 bool base64_ssse3::is_compiled()
@@ -317,7 +317,8 @@ std::size_t base64_ssse3::encode(const uint8_t*, std::size_t, uint8_t*)
     return 0;
 }
 
-std::size_t base64_ssse3::decode(const uint8_t*, std::size_t, uint8_t*)
+std::size_t base64_ssse3::decode(const uint8_t*, std::size_t, uint8_t*,
+                                 std::error_code&)
 {
     assert(0 && "Target platform or compiler does not support this "
                 "implementation");

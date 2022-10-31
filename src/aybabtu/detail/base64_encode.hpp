@@ -8,7 +8,6 @@
 #include "../version.hpp"
 #include "tables.hpp"
 
-#include <cassert>
 #include <cstdint>
 
 namespace aybabtu

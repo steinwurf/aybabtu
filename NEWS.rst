@@ -8,6 +8,10 @@ Latest
 ------
 * tbd
 
+4.0.0
+-----
+* Minor: Added non-assert-based error handling.
+
 3.0.0
 -----
 * Major: Completely redid the library; the API is now much more consistent and
