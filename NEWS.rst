@@ -6,10 +6,6 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
-
-4.0.0
------
 * Minor: Added non-assert-based error handling.
 
 3.0.0
