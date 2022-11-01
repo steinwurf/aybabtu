@@ -4,7 +4,7 @@
 // Distributed under the "BSD License". See the accompanying LICENSE.rst file.
 
 #include "base64_avx2.hpp"
-#include "../version.hpp"
+
 #include "base64_decode.hpp"
 #include "base64_encode.hpp"
 
@@ -12,6 +12,9 @@
 
 #include <cassert>
 #include <cstdint>
+#include <system_error>
+
+#include "../version.hpp"
 
 // Include x86 intrinsics for GCC-compatible compilers on x86/x86_64
 #if defined(PLATFORM_GCC_COMPATIBLE_X86)
@@ -303,9 +306,9 @@ std::size_t base64_avx2::encode(const uint8_t* src, std::size_t size,
 }
 
 std::size_t base64_avx2::decode(const uint8_t* src, std::size_t size,
-                                uint8_t* out)
+                                uint8_t* out, std::error_code& error)
 {
-    return base64_decode(&decode_loop_avx2, src, size, out);
+    return base64_decode(&decode_loop_avx2, src, size, out, error);
 }
 
 bool base64_avx2::is_compiled()
@@ -320,7 +323,8 @@ std::size_t base64_avx2::encode(const uint8_t*, std::size_t, uint8_t*)
     return 0;
 }
 
-std::size_t base64_avx2::decode(const uint8_t*, std::size_t, uint8_t*)
+std::size_t base64_avx2::decode(const uint8_t*, std::size_t, uint8_t*,
+                                std::error_code&)
 {
     assert(0 && "Target platform or compiler does not support this "
                 "implementation");

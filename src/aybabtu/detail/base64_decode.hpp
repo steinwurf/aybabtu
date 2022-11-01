@@ -8,8 +8,8 @@
 #include "../version.hpp"
 #include "tables.hpp"
 
-#include <cassert>
 #include <cstdint>
+#include <system_error>
 
 namespace aybabtu
 {
@@ -19,8 +19,15 @@ namespace detail
 {
 template <class Func>
 static inline std::size_t base64_decode(Func func, const uint8_t* src,
-                                        std::size_t size, uint8_t* out)
+                                        std::size_t size, uint8_t* out,
+                                        std::error_code& error)
 {
+    if (size % 4)
+    {
+        error = std::make_error_code(std::errc::invalid_argument);
+        return 0;
+    }
+
     std::size_t written = 0;
     std::size_t remaining = size;
 
@@ -41,7 +48,7 @@ static inline std::size_t base64_decode(Func func, const uint8_t* src,
         if (q >= 254)
         {
             // Treat character '=' as invalid for byte 0:
-            assert(false);
+            error = std::make_error_code(std::errc::invalid_argument);
             return 0;
         }
         std::size_t carry = q << 2;
@@ -54,7 +61,7 @@ static inline std::size_t base64_decode(Func func, const uint8_t* src,
         if (q >= 254)
         {
             // Treat character '=' as invalid for byte 1:
-            assert(false);
+            error = std::make_error_code(std::errc::invalid_argument);
             return 0;
         }
         *out++ = carry | (q >> 4);
@@ -76,12 +83,17 @@ static inline std::size_t base64_decode(Func func, const uint8_t* src,
                 {
                     remaining--;
                     q = tables::decode[*src++];
-                    assert(q == 254);
+                    if (q != 254)
+                    {
+                        error =
+                            std::make_error_code(std::errc::invalid_argument);
+                        return 0;
+                    }
                     return written;
                 }
             }
             // If we get here, there was an error:
-            assert(false);
+            error = std::make_error_code(std::errc::invalid_argument);
             return 0;
         }
         *out++ = carry | (q >> 2);
@@ -100,7 +112,7 @@ static inline std::size_t base64_decode(Func func, const uint8_t* src,
         }
         if (q == 255)
         {
-            assert(false);
+            error = std::make_error_code(std::errc::invalid_argument);
             return 0;
         }
 

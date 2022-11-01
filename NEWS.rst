@@ -6,7 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Minor: Added non-assert-based error handling.
 
 3.0.0
 -----

@@ -20,8 +20,9 @@ int main()
     std::cout << "Trying to decode..." << std::endl;
     std::vector<uint8_t> decoded(
         aybabtu::base64::decode_size(encoded, sizeof(encoded)));
-    aybabtu::base64::decode(encoded, sizeof(encoded), decoded.data());
-
+    std::error_code error;
+    aybabtu::base64::decode(encoded, sizeof(encoded), decoded.data(), error);
+    assert(!error);
     if (memcmp(buffer, decoded.data(), sizeof(buffer)) == 0)
     {
         std::cout << "Decoded correctly." << std::endl;

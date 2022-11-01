@@ -11,12 +11,18 @@ namespace aybabtu
 {
 inline namespace STEINWURF_AYBABTU_VERSION
 {
+/// The SIMD acceleration
 enum class simd
 {
+    /// Automated Acceleration
     auto_,
+    /// No Acceleration
     none,
+    /// SSSE3 Acceleration
     ssse3,
+    /// AVX2 Acceleration
     avx2,
+    /// NEON Acceleration
     neon
 };
 }

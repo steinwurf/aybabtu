@@ -20,8 +20,10 @@ static void test_encode_decode(const uint8_t* data, std::size_t size,
     auto decoded_size =
         aybabtu::base64::decode_size(encoded.data(), encoded.size());
     std::vector<uint8_t> decoded(decoded_size);
+    std::error_code error;
     auto written = aybabtu::base64::decode(encoded.data(), encoded.size(),
-                                           decoded.data(), simd);
+                                           decoded.data(), error, simd);
+    ASSERT_FALSE((bool)error);
     EXPECT_EQ(written, decoded_size);
     ASSERT_EQ(decoded_size, size);
     EXPECT_EQ(0, memcmp(data, decoded.data(), size));
@@ -47,11 +49,6 @@ static void encode_decode_simd(aybabtu::simd simd)
         test_encode_decode(buffer.data(), buffer.size(), simd);
     }
     {
-        std::vector<uint8_t> buffer = {};
-        std::generate(buffer.begin(), buffer.end(), rand);
-        test_encode_decode(buffer.data(), buffer.size(), simd);
-    }
-    {
         std::vector<uint8_t> buffer(100);
         std::generate(buffer.begin(), buffer.end(), rand);
         test_encode_decode(buffer.data(), buffer.size(), simd);
@@ -69,7 +66,7 @@ static void encode_decode_simd(aybabtu::simd simd)
     {
         for (uint32_t i = 0; i < 1000; ++i)
         {
-            std::vector<uint8_t> buffer(rand() % 10000);
+            std::vector<uint8_t> buffer(1 + rand() % 10000);
             std::generate(buffer.begin(), buffer.end(), rand);
             test_encode_decode(buffer.data(), buffer.size(), simd);
         }
@@ -118,11 +115,32 @@ TEST(test_base64, know_results)
     EXPECT_EQ(size, decoding_expectation.size());
 
     std::vector<uint8_t> decoded(size);
+    std::error_code error;
     aybabtu::base64::decode(encoding_expectation.data(),
-                            encoding_expectation.size(), decoded.data());
+                            encoding_expectation.size(), decoded.data(), error);
     EXPECT_EQ(decoding_expectation, decoded);
 
     auto encoded = aybabtu::base64::encode(decoding_expectation.data(),
                                            decoding_expectation.size());
     EXPECT_EQ(encoding_expectation, encoded);
+}
+
+TEST(test_base64, invalid_string)
+{
+    auto check_fail = [](const std::string& bad_base64)
+    {
+        assert(bad_base64.size() % 4 == 0);
+        auto size =
+            aybabtu::base64::decode_size(bad_base64.data(), bad_base64.size());
+        std::vector<uint8_t> decoded(size);
+        std::error_code error;
+        aybabtu::base64::decode(bad_base64.data(), bad_base64.size(),
+                                decoded.data(), error);
+        EXPECT_TRUE((bool)error);
+    };
+
+    check_fail("====");
+    check_fail("=aaa");
+    check_fail("aaaa=aaa");
+    check_fail("aaaaaa=a");
 }

@@ -13,6 +13,7 @@
 
 #include <cassert>
 #include <cstdint>
+#include <system_error>
 
 // Include ARM NEON intrinsics
 #if defined(PLATFORM_NEON)
@@ -268,9 +269,9 @@ std::size_t base64_neon::encode(const uint8_t* src, std::size_t size,
 }
 
 std::size_t base64_neon::decode(const uint8_t* src, std::size_t size,
-                                uint8_t* out)
+                                uint8_t* out, std::error_code& error)
 {
-    return base64_decode(&decode_loop_neon, src, size, out);
+    return base64_decode(&decode_loop_neon, src, size, out, error);
 }
 
 bool base64_neon::is_compiled()
@@ -285,7 +286,8 @@ std::size_t base64_neon::encode(const uint8_t*, std::size_t, uint8_t*)
     return 0;
 }
 
-std::size_t base64_neon::decode(const uint8_t*, std::size_t, uint8_t*)
+std::size_t base64_neon::decode(const uint8_t*, std::size_t, uint8_t*,
+                                std::error_code&)
 {
     assert(0 && "Target platform or compiler does not support this "
                 "implementation");
