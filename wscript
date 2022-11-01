@@ -5,7 +5,7 @@ from waflib.Build import BuildContext
 import os
 
 APPNAME = "aybabtu"
-VERSION = "3.0.0"
+VERSION = "3.1.0"
 
 
 def configure(conf):
