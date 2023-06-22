@@ -41,8 +41,8 @@ aybabtu
    :target: https://en.wikipedia.org/wiki/All_your_base_are_belong_to_us
 
 aybabtu is a tiny base64 C++11 library containing functions to encode and decode base64 strings.
-It has CPU-optimized implementations for x86 and ARM processors. The library, particularly
-the CPU optimizations, is inspired by
+It has CPU-optimized implementations for x86 and ARM processors.
+The library, particularly the CPU optimizations, is inspired by
 `Alfred Klomp's base64 C-library <https://github.com/aklomp/base64>`_.
 
 .. contents:: Table of Contents:

@@ -9,7 +9,7 @@ VERSION = "3.1.1"
 
 
 def configure(conf):
-
+    conf.set_cxx_std(11)
     _set_simd_flags(conf)
 
 
@@ -47,7 +47,6 @@ def _set_simd_flags(conf):
 
 
 def build(bld):
-
     optimized_sources = {
         "detail/base64_avx2": ["-mavx2", "/arch:AVX2"],
         "detail/base64_neon": ["-mfpu=neon"],
@@ -63,7 +62,6 @@ def build(bld):
         cxxflags += ["-funroll-loops"]
 
     for source, flags in optimized_sources.items():
-
         simd_flags = [f for f in flags if f in bld.env["CXXFLAGS_AYBABTU_SIMD"]]
 
         if "-mavx2" in simd_flags and "clang" not in compiler_binary:
@@ -100,7 +98,6 @@ def build(bld):
     )
 
     if bld.is_toplevel():
-
         # Only build tests when executed from the top-level wscript,
         # i.e. not when included as a dependency
         bld.recurse("test")
@@ -118,7 +115,6 @@ def prepare_release(ctx):
 
     # Rewrite versions
     with ctx.rewrite_file(filename="src/aybabtu/version.hpp") as f:
-
         pattern = r"#define STEINWURF_AYBABTU_VERSION v\d+_\d+_\d+"
         replacement = "#define STEINWURF_AYBABTU_VERSION v{}".format(
             VERSION.replace(".", "_")
@@ -139,7 +135,6 @@ class PlotContext(BuildContext):
 
 
 def plot_benchmarks(ctx):
-
     venv = ctx.create_virtualenv(name="virtualenv-plots", overwrite=False)
 
     if not os.path.isfile("benchmarks/requirements.txt"):

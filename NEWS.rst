@@ -6,7 +6,8 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Major: Use waf-tools 5.
+
 
 3.1.1
 -----

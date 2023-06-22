@@ -3,7 +3,7 @@
         "name": "platform",
         "resolver": "git",
         "method": "semver",
-        "major": 4,
+        "major": 5,
         "sources": [
             "github.com/steinwurf/platform.git"
         ]
@@ -12,7 +12,7 @@
         "name": "cpuid",
         "resolver": "git",
         "method": "semver",
-        "major": 8,
+        "major": 9,
         "sources": [
             "github.com/steinwurf/cpuid.git"
         ]
@@ -21,7 +21,7 @@
         "name": "waf-tools",
         "resolver": "git",
         "method": "semver",
-        "major": 4,
+        "major": 5,
         "sources": [
             "github.com/steinwurf/waf-tools.git"
         ]
@@ -31,7 +31,7 @@
         "internal": true,
         "resolver": "git",
         "method": "semver",
-        "major": 1,
+        "major": 2,
         "sources": [
             "github.com/steinwurf/gbenchmark.git"
         ]
@@ -41,7 +41,7 @@
         "internal": true,
         "resolver": "git",
         "method": "semver",
-        "major": 4,
+        "major": 5,
         "sources": [
             "github.com/steinwurf/gtest.git"
         ]
