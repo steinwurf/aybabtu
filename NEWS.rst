@@ -7,6 +7,10 @@ every change, see the Git log.
 Latest
 ------
 * Major: Use waf-tools 5.
+
+
+3.1.1
+-----
 * Patch: Removed unused code.
 
 3.1.0

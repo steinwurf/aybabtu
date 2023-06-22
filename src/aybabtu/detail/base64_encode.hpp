@@ -17,7 +17,7 @@ inline namespace STEINWURF_AYBABTU_VERSION
 namespace detail
 {
 
-template <class Func>
+template <class Func, int Chunk = 0>
 static inline std::size_t base64_encode(Func func, const uint8_t* src,
                                         std::size_t size, uint8_t* out)
 {
@@ -27,16 +27,16 @@ static inline std::size_t base64_encode(Func func, const uint8_t* src,
     while (true)
     {
         func(&src, remaining, &out, written);
-        if (remaining-- == 0)
+        if (remaining == 0)
         {
             return written;
         }
-
         *out++ = tables::encode[*src >> 2];
         written += 1;
+        remaining -= 1;
 
         uint8_t carry = (*src++ << 4) & 0x30;
-        if (remaining-- == 0)
+        if (remaining == 0)
         {
             *out++ = tables::encode[carry];
             *out++ = '=';
@@ -46,9 +46,10 @@ static inline std::size_t base64_encode(Func func, const uint8_t* src,
         }
         *out++ = tables::encode[carry | (*src >> 4)];
         written += 1;
+        remaining -= 1;
 
         carry = (*src++ << 2) & 0x3C;
-        if (remaining-- == 0)
+        if (remaining == 0)
         {
             *out++ = tables::encode[carry];
             *out++ = '=';
@@ -58,6 +59,7 @@ static inline std::size_t base64_encode(Func func, const uint8_t* src,
         *out++ = tables::encode[carry | (*src >> 6)];
         *out++ = tables::encode[*src++ & 0x3F];
         written += 2;
+        remaining -= 1;
     }
 }
 }
