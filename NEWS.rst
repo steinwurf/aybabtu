@@ -6,7 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Major: Only builds with CMake
+* Major: Bumped platform to v6
+* Major: Bumped cpuid to v10
+* Major: Bumped gtest to v6
 
 4.0.0
 -----

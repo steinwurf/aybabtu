@@ -16,7 +16,6 @@ if(NOT DEFINED STEINWURF_RESOLVE)
   endif()
 
   set(STEINWURF_RESOLVE "${CMAKE_CURRENT_SOURCE_DIR}/resolve_symlinks")
-  set(STEINWURF_TOP_NAME aybabtu)
 endif()
 
 # platform dependency
@@ -33,7 +32,7 @@ endif()
 file(GLOB_RECURSE aybabtu_sources ./src/*.cpp)
 
 # Is this the top-level steinwurf project?
-if(${PROJECT_NAME} STREQUAL ${STEINWURF_TOP_NAME})
+if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
   # Create static library
   add_library(aybabtu STATIC ${aybabtu_sources})
 
@@ -110,6 +109,28 @@ endif()
 target_include_directories(aybabtu INTERFACE src)
 target_compile_features(aybabtu PUBLIC cxx_std_11)
 add_library(steinwurf::aybabtu ALIAS aybabtu)
+
+# Is this the top-level steinwurf project?
+if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
+  enable_testing()
+
+
+  # Google Test dependency
+  add_subdirectory("${STEINWURF_RESOLVE}/gtest-source" gtest_main EXCLUDE_FROM_ALL)
+
+  # Build test executable
+  file(GLOB_RECURSE aybabtu_tests_sources ./test/*.cpp)
+  add_executable(aybabtu_tests ${aybabtu_tests_sources})
+  target_link_libraries(aybabtu_tests 
+    gtest_main
+    steinwurf::aybabtu
+    steinwurf::cpuid
+    steinwurf::platform
+    )
+
+  add_test(aybabtu_tests aybabtu_tests)
+endif()
+
 
 # Install headers excluding "detail" as these are internal to the library.
 install(
