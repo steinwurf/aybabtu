@@ -116,7 +116,9 @@ if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
 
 
   # Google Test dependency
+  if(NOT TARGET steinwurf::gtest)
   add_subdirectory("${STEINWURF_RESOLVE}/gtest-source" gtest_main EXCLUDE_FROM_ALL)
+  endif()
 
   # Build test executable
   file(GLOB_RECURSE aybabtu_tests_sources ./test/*.cpp)
