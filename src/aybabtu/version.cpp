@@ -12,7 +12,7 @@ inline namespace STEINWURF_AYBABTU_VERSION
 {
 std::string version()
 {
-    return "4.0.0";
+    return "5.0.0";
 }
 }
 }

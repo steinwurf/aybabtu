@@ -11,7 +11,7 @@ namespace aybabtu
 {
 /// Here we define the STEINWURF_AYBABTU_VERSION this should be updated on each
 /// release
-#define STEINWURF_AYBABTU_VERSION v4_0_0
+#define STEINWURF_AYBABTU_VERSION v5_0_0
 
 inline namespace STEINWURF_AYBABTU_VERSION
 {

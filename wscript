@@ -5,7 +5,7 @@ from waflib.Build import BuildContext
 import os
 
 APPNAME = "aybabtu"
-VERSION = "4.0.0"
+VERSION = "5.0.0"
 
 
 def options(ctx):
