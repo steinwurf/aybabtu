@@ -114,11 +114,17 @@ add_library(steinwurf::aybabtu ALIAS aybabtu)
 if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
   enable_testing()
 
+  if(CMAKE_C_COMPILER_ID MATCHES "MSVC")
+    # For Windows: Prevent overriding the parent project's compiler/linker
+    # settings
+    set(gtest_force_shared_crt
+      ON
+      CACHE BOOL "" FORCE)
+  endif()
+
 
   # Google Test dependency
-  if(NOT TARGET steinwurf::gtest)
   add_subdirectory("${STEINWURF_RESOLVE}/gtest-source" gtest_main EXCLUDE_FROM_ALL)
-  endif()
 
   # Build test executable
   file(GLOB_RECURSE aybabtu_tests_sources ./test/*.cpp)
