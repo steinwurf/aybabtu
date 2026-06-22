@@ -60,6 +60,7 @@ target_link_libraries(aybabtu PRIVATE steinwurf::platform)
 
 # Check Accelerations
 include(CheckCXXCompilerFlag)
+include(CheckCXXSourceCompiles)
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|AppleClang|Clang")
   # # SSE2 check_cxx_compiler_flag("-Werror -msse2" HAS_SSE2)
@@ -88,14 +89,35 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|AppleClang|Clang")
     file(GLOB_RECURSE avx2 ./src/*avx2.cpp)
     set_source_files_properties(${avx2} PROPERTIES COMPILE_FLAGS -mavx2)
   endif()
+  
+  # # NEON
+  # check_cxx_compiler_flag("-Werror -mfpu=neon" HAS_NEON)
 
   # NEON
-  check_cxx_compiler_flag("-Werror -mfpu=neon" HAS_NEON)
+  # 1. First check if NEON is natively active (e.g., AArch64) without extra flags
+  check_cxx_source_compiles("
+    #ifndef __ARM_NEON
+    #error NEON not supported natively
+    #endif
+    int main() { return 0; }
+  " HAS_NATIVE_NEON)
 
-  if(HAS_NEON)
-    file(GLOB_RECURSE neon ./src/*neon.cpp)
-    set_source_files_properties(${neon} PROPERTIES COMPILE_FLAGS -mfpu=neon)
+  if(HAS_NATIVE_NEON)
+    # Native NEON found! No extra compiler flags are needed.
+    message(STATUS "NEON natively enabled (AArch64)")
+  else()
+    # 2. Fallback for 32-bit ARM: check if the compiler accepts -mfpu=neon
+    check_cxx_compiler_flag("-Werror -mfpu=neon" HAS_NEON_FLAG)
+
+    if(HAS_NEON_FLAG)
+      file(GLOB_RECURSE neon ./src/*neon.cpp)
+      set_source_files_properties(${neon} PROPERTIES COMPILE_FLAGS -mfpu=neon)
+      message(STATUS "NEON enabled via -mfpu=neon flag")
+    else()
+      message(STATUS "NEON not supported by compiler target")
+    endif()
   endif()
+
 elseif(CMAKE_C_COMPILER_ID MATCHES "MSVC")
   # AVX2
   check_cxx_compiler_flag(/arch:AVX2 HAS_AVX2)
