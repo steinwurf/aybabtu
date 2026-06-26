@@ -84,25 +84,26 @@ jobs:
     container:
       image: ghcr.io/steinwurf/build-images/zig-cpp
       options: --user 0:0
-      volumes:
-        - /root/.ssh:/root/.ssh
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
-      - name: Install dependencies
+        with:
+          persist-credentials: false
+      - name: Configure Github Authentication
         run: |
-          apk add --no-cache \
-            python3 \
-            py3-pip \
-            git \
-            cmake \
-            build-base
-      - name: Waf Clean
-        run: python3 waf clean --no_resolve
+          git config --global credential.helper 'store'
+          git credential approve <<EOF
+          protocol=https
+          host=github.com
+          username=x-access-token
+          password=${{ secrets.GH_ACCESS_TOKEN }}
+          EOF
       - name: Waf Configure with Zig Toolchain
-        run: python3 waf configure --git_protocol=git@ --cmake_toolchain=./resolve_symlinks/toolchains/zig-toolchain-x86_64-linux-musl.cmake --cmake_verbose
+        run: python3 waf configure --git_protocol=https:// --cmake_toolchain=./resolve_symlinks/toolchains/zig-toolchain-x86_64-linux-musl.cmake --cmake_verbose
       - name: Waf Build with Zig Toolchain
-        run: python3 waf build --run_tests
+        run: python3 waf build
+      - name: Waf Run Tests
+        run: python3 waf --run_tests
 
   macos_cmake:
     timeout-minutes: 45

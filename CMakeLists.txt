@@ -60,6 +60,7 @@ target_link_libraries(aybabtu PRIVATE steinwurf::platform)
 
 # Check Accelerations
 include(CheckCXXCompilerFlag)
+include(CheckCXXSourceCompiles)
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|AppleClang|Clang")
   # # SSE2 check_cxx_compiler_flag("-Werror -msse2" HAS_SSE2)
@@ -89,12 +90,21 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|AppleClang|Clang")
     set_source_files_properties(${avx2} PROPERTIES COMPILE_FLAGS -mavx2)
   endif()
 
+
   # NEON
-  check_cxx_compiler_flag("-Werror -mfpu=neon" HAS_NEON)
+  if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|AARCH64|arm64|ARM64)$")
+    check_cxx_source_compiles(
+      "int main()\n{\n#if defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__)\n  return 0;\n#else\n#error NEON is required\n#endif\n}\n"
+      HAS_NEON)
+  else()
+    check_cxx_compiler_flag("-Werror -mfpu=neon" HAS_NEON)
+  endif()
 
   if(HAS_NEON)
     file(GLOB_RECURSE neon ./src/*neon.cpp)
-    set_source_files_properties(${neon} PROPERTIES COMPILE_FLAGS -mfpu=neon)
+    if(NOT CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|AARCH64|arm64|ARM64)$")
+      set_source_files_properties(${neon} PROPERTIES COMPILE_FLAGS -mfpu=neon)
+    endif()
   endif()
 elseif(CMAKE_C_COMPILER_ID MATCHES "MSVC")
   # AVX2
@@ -129,7 +139,7 @@ if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
   # Build test executable
   file(GLOB_RECURSE aybabtu_tests_sources ./test/*.cpp)
   add_executable(aybabtu_tests ${aybabtu_tests_sources})
-  target_link_libraries(aybabtu_tests 
+  target_link_libraries(aybabtu_tests
     gtest_main
     steinwurf::aybabtu
     steinwurf::cpuid
