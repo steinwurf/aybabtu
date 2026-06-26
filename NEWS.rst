@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+5.0.1
+-----
 * Patch: Fixed NEON detection on AArch64 by checking for compiler intrinsics instead of
   relying on the unavailable -mfpu=neon flag.
 
